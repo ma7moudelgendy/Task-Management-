@@ -19,3 +19,6 @@ Route::get('/health', function () {
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
+// Guards V1
+require __DIR__ . '/guards/v1/auth.php';

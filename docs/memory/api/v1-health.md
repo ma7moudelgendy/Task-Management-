@@ -16,3 +16,4 @@ Returns the API runtime health status and version.
 ## Files
 - route: `routes/api.php`
 - test: `tests/Feature/ApiBootTest.php`
+

@@ -22,3 +22,4 @@ Checks application and API health status.
   }
 }
 ```
+

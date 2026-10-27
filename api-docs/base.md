@@ -36,3 +36,4 @@ All API endpoints follow a standardized response envelope.
 ## Base URL & Versioning
 - Base Path: `/api/v1`
 - Authentication: Bearer Token via Laravel Sanctum
+

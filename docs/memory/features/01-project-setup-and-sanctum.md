@@ -13,3 +13,4 @@ Laravel 12 API scaffolding, MySQL database connection, Laravel Sanctum token aut
 
 ## Tests
 - `tests/Feature/ApiBootTest.php` (health check, unauthenticated, 404 handler)
+

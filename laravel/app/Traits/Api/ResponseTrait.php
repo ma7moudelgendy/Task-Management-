@@ -57,3 +57,4 @@ trait ResponseTrait
         return response()->json($payload, $httpStatus);
     }
 }
+

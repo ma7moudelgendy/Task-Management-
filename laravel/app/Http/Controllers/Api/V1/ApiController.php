@@ -10,3 +10,4 @@ abstract class ApiController extends Controller
 {
     use HandlesApiExceptions, ApiResponse;
 }
+

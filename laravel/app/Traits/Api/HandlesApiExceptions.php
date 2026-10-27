@@ -77,3 +77,4 @@ trait HandlesApiExceptions
         }
     }
 }
+
