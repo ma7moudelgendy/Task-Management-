@@ -22,3 +22,4 @@ class RegisterRequest extends BaseApiRequest
         ];
     }
 }
+

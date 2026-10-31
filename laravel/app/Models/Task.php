@@ -103,4 +103,51 @@ class Task extends Model
     {
         return $this->hasOne(RecurringTaskRule::class);
     }
+
+    /**
+     * Check if a user is an assignee of this task.
+     */
+    public function isAssignee(User $user): bool
+    {
+        if ($this->relationLoaded('assignees')) {
+            return $this->assignees->contains('id', $user->id);
+        }
+
+        return $this->assignees()->where('task_assignees.user_id', $user->id)->exists();
+    }
+
+    /**
+     * Check if a user is the creator of this task.
+     */
+    public function isCreator(User $user): bool
+    {
+        return (int) $this->created_by === (int) $user->id;
+    }
+
+    /**
+     * Determine if a potential parent would cause a circular hierarchy.
+     */
+    public function wouldCauseCycle(int $newParentId): bool
+    {
+        if ((int) $this->id === (int) $newParentId) {
+            return true;
+        }
+
+        $currentParentId = $newParentId;
+        while ($currentParentId) {
+            if ((int) $currentParentId === (int) $this->id) {
+                return true;
+            }
+
+            $parent = static::query()->select(['id', 'parent_task_id'])->find($currentParentId);
+            if (! $parent) {
+                break;
+            }
+
+            $currentParentId = $parent->parent_task_id;
+        }
+
+        return false;
+    }
 }
+

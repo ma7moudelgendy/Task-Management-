@@ -32,3 +32,4 @@ readonly class UpdateProfileDTO
         ], fn ($val) => $val !== null);
     }
 }
+

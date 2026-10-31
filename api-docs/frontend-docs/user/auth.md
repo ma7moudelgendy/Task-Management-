@@ -109,3 +109,4 @@ All endpoints return HTTP status `200` with the outcome identified in `key`.
   "password_confirmation": "BrandNewPassword123!"
 }
 ```
+

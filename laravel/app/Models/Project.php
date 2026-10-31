@@ -59,4 +59,68 @@ class Project extends Model
     {
         return $this->hasMany(ActivityLog::class);
     }
+
+    /**
+     * Get member record for a given user.
+     */
+    public function getMember(User $user): ?User
+    {
+        if ($this->relationLoaded('members')) {
+            return $this->members->firstWhere('id', $user->id);
+        }
+
+        return $this->members()->where('project_members.user_id', $user->id)->first();
+    }
+
+    /**
+     * Get project role for a given user.
+     */
+    public function userRole(User $user): ?\App\Enums\ProjectRole
+    {
+        $member = $this->getMember($user);
+        if (! $member || ! $member->pivot) {
+            return null;
+        }
+
+        $role = $member->pivot->role;
+        if ($role instanceof \App\Enums\ProjectRole) {
+            return $role;
+        }
+
+        return \App\Enums\ProjectRole::tryFrom((string) $role);
+    }
+
+    /**
+     * Check if user is a member of the project.
+     */
+    public function isMember(User $user): bool
+    {
+        return $this->getMember($user) !== null;
+    }
+
+    /**
+     * Check if user is an owner of the project.
+     */
+    public function isOwner(User $user): bool
+    {
+        return $this->userRole($user) === \App\Enums\ProjectRole::OWNER;
+    }
+
+    /**
+     * Check if user is an owner or manager of the project.
+     */
+    public function isOwnerOrManager(User $user): bool
+    {
+        $role = $this->userRole($user);
+        return $role === \App\Enums\ProjectRole::OWNER || $role === \App\Enums\ProjectRole::MANAGER;
+    }
+
+    /**
+     * Count remaining owners in the project.
+     */
+    public function ownersCount(): int
+    {
+        return $this->members()->where('project_members.role', \App\Enums\ProjectRole::OWNER->value)->count();
+    }
 }
+

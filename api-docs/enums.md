@@ -45,3 +45,4 @@ Values:
 - `DAILY`: Recurs once per day or every N days.
 - `WEEKLY`: Recurs every week on scheduled intervals.
 - `MONTHLY`: Recurs every month.
+

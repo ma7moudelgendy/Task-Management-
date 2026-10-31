@@ -37,3 +37,4 @@ class TeamMember extends Pivot
         return $this->belongsTo(User::class);
     }
 }
+

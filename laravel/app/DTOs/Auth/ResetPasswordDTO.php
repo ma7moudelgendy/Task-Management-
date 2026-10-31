@@ -21,3 +21,4 @@ readonly class ResetPasswordDTO
         );
     }
 }
+

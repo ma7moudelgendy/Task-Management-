@@ -30,3 +30,4 @@ readonly class RegisterDTO
         ];
     }
 }
+

@@ -1,6 +1,8 @@
+
 ---
-description: Clean Code + AI-specific guardrails for all production code
-globs: ["*.php", "*.ts", "*.tsx", "*.js", "*.jsx", "*.py", "*.go", "*.rs"]
+trigger: glob
+description: "Clean Code and AI-specific guardrails for production code."
+globs: "*.php, *.ts, *.tsx, *.js, *.jsx, *.py, *.go, *.rs"
 alwaysApply: true
 
 ---

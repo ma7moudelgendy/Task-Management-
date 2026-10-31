@@ -36,3 +36,4 @@ class RecurringTaskRule extends Model
         return $this->belongsTo(Task::class);
     }
 }
+

@@ -37,3 +37,4 @@ class ProjectMember extends Pivot
         return $this->belongsTo(User::class);
     }
 }
+

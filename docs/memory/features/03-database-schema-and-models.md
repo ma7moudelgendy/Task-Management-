@@ -19,3 +19,4 @@ Relational schema with foreign keys, compound unique constraints, indexes, soft-
 
 ## Tests
 - `tests/Unit/DatabaseSchemaTest.php` (5 tests, 14 assertions passing)
+

@@ -22,3 +22,4 @@ Sanctum token-based authentication and profile management for users.
 - Repository: `app/Repositories/Eloquent/UserRepository.php`
 - Requests: `app/Http/Requests/Api/Auth/*`
 - Tests: `tests/Feature/AuthTest.php`
+

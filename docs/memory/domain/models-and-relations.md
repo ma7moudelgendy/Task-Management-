@@ -8,3 +8,4 @@
 - `TaskComment`: belongs to `Task` and `User`.
 - `TaskAttachment`: belongs to `Task` and `User` (uploader).
 - `ActivityLog`: polymorphic subject, tracks team/project/actor audits.
+

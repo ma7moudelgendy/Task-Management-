@@ -179,3 +179,4 @@ class AuthController extends ApiController
         });
     }
 }
+

@@ -22,3 +22,4 @@ class ResetPasswordRequest extends BaseApiRequest
         ];
     }
 }
+

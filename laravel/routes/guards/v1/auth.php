@@ -17,3 +17,4 @@ Route::prefix('auth')->group(function () {
         Route::patch('/me', [AuthController::class, 'updateProfile']);
     });
 });
+

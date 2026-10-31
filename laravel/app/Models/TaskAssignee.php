@@ -42,3 +42,4 @@ class TaskAssignee extends Pivot
         return $this->belongsTo(User::class, 'assigned_by');
     }
 }
+

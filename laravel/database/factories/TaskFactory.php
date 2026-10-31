@@ -36,3 +36,4 @@ class TaskFactory extends Factory
         ];
     }
 }
+

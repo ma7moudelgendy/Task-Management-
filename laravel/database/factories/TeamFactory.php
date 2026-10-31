@@ -25,3 +25,4 @@ class TeamFactory extends Factory
         ];
     }
 }
+

@@ -26,3 +26,4 @@ class TaskDependency extends Pivot
         return $this->belongsTo(Task::class, 'depends_on_task_id');
     }
 }
+

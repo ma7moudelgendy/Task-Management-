@@ -12,3 +12,4 @@ Complete user authentication lifecycle via Sanctum tokens with registration, log
 
 ## Tests
 - `tests/Feature/AuthTest.php` (10 tests, 46 assertions passing)
+
