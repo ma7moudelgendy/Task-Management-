@@ -73,6 +73,11 @@ class OpenApiSpecTest extends TestCase
             '/tasks/{task}/dependencies' => ['get', 'post'],
             '/tasks/{task}/dependencies/{dependency}' => ['delete'],
             '/tasks/{task}/history' => ['get'],
+            '/tasks/{task}/comments' => ['get', 'post'],
+            '/comments/{comment}' => ['patch', 'delete'],
+            '/tasks/{task}/attachments' => ['get', 'post'],
+            '/tasks/{task}/attachments/{attachment}/download' => ['get'],
+            '/tasks/{task}/attachments/{attachment}' => ['delete'],
         ];
 
         foreach ($expectedEndpoints as $route => $methods) {
@@ -131,6 +136,14 @@ class OpenApiSpecTest extends TestCase
             ['/tasks/{task}/dependencies', 'post'],
             ['/tasks/{task}/dependencies/{dependency}', 'delete'],
             ['/tasks/{task}/history', 'get'],
+            ['/tasks/{task}/comments', 'get'],
+            ['/tasks/{task}/comments', 'post'],
+            ['/comments/{comment}', 'patch'],
+            ['/comments/{comment}', 'delete'],
+            ['/tasks/{task}/attachments', 'get'],
+            ['/tasks/{task}/attachments', 'post'],
+            ['/tasks/{task}/attachments/{attachment}/download', 'get'],
+            ['/tasks/{task}/attachments/{attachment}', 'delete'],
         ];
 
         foreach ($protectedOperations as [$route, $method]) {

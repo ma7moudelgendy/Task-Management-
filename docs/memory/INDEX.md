@@ -12,6 +12,7 @@
 - [`features/05-projects-and-memberships.md`](features/05-projects-and-memberships.md) — Phase 5: Projects and project memberships module.
 - [`features/06-tasks-core-crud-and-assignees.md`](features/06-tasks-core-crud-and-assignees.md) — Phase 6: Tasks core CRUD, subtasks & assignees module.
 - [`features/07-task-workflow-dependencies-and-audit.md`](features/07-task-workflow-dependencies-and-audit.md) — Phase 7: Task workflow, status transitions, dependencies & audit trail.
+- [`features/08-comments-and-attachments.md`](features/08-comments-and-attachments.md) — Phase 8: Comments & attachments collaboration module.
 
 ## Domain
 - [`domain/models-and-relations.md`](domain/models-and-relations.md) — Core models, relationships, and invariants.
@@ -23,3 +24,4 @@
 - [`api/v1-projects.md`](api/v1-projects.md) — `/api/v1/projects/*` (CRUD, members, roles, filters)
 - [`api/v1-tasks.md`](api/v1-tasks.md) — `/api/v1/tasks/*` & `/api/v1/projects/{project}/tasks` (CRUD, subtasks, assignees, filters)
 - [`api/v1-task-workflow.md`](api/v1-task-workflow.md) — `/api/v1/tasks/{task}/status`, `dependencies`, `history` (workflow, DAG, audit)
+- [`api/v1-comments-and-attachments.md`](api/v1-comments-and-attachments.md) — `/api/v1/tasks/{task}/comments` & `attachments` (discussions, private file storage, streaming)

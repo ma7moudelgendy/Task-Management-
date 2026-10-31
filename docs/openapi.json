@@ -47,6 +47,14 @@
         {
             "name": "Tasks",
             "description": "Task management, subtasks hierarchy, project assignees, status lifecycle, priorities, and filters."
+        },
+        {
+            "name": "Comments",
+            "description": "Task discussion comments, author-exclusive edits, and manager moderation."
+        },
+        {
+            "name": "Attachments",
+            "description": "Multi-type validated task file attachments on private disk storage and authorized download streaming."
         }
     ],
     "paths": {
@@ -2045,6 +2053,373 @@
                     }
                 }
             }
+        },
+        "/tasks/{task}/comments": {
+            "get": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "List task comments",
+                "description": "Retrieve paginated comments for the task.",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "task",
+                        "in": "path",
+                        "required": true,
+                        "description": "Task ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Comments retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommentListResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Create task comment",
+                "description": "Add a new discussion comment to the task.",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "task",
+                        "in": "path",
+                        "required": true,
+                        "description": "Task ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreCommentRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Comment created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommentDetailResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/comments/{comment}": {
+            "patch": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Update comment",
+                "description": "Update body of an existing comment (author only).",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "comment",
+                        "in": "path",
+                        "required": true,
+                        "description": "Comment ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateCommentRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Comment updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommentDetailResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Delete comment",
+                "description": "Soft delete a comment (author or project manager/owner).",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "comment",
+                        "in": "path",
+                        "required": true,
+                        "description": "Comment ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Comment deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StandardEnvelopeResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/{task}/attachments": {
+            "get": {
+                "tags": [
+                    "Attachments"
+                ],
+                "summary": "List task attachments",
+                "description": "Retrieve paginated file attachments on the task.",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "task",
+                        "in": "path",
+                        "required": true,
+                        "description": "Task ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Attachments retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AttachmentListResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Attachments"
+                ],
+                "summary": "Upload file attachment",
+                "description": "Upload a validated file (max 10MB) to private storage disk.",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "task",
+                        "in": "path",
+                        "required": true,
+                        "description": "Task ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "file"
+                                ],
+                                "properties": {
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "description": "File to upload (pdf, doc, docx, xls, xlsx, png, jpg, jpeg, zip, txt; max 10MB)"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Attachment uploaded successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AttachmentDetailResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/{task}/attachments/{attachment}/download": {
+            "get": {
+                "tags": [
+                    "Attachments"
+                ],
+                "summary": "Download attachment file",
+                "description": "Authorized binary streaming download with IDOR protection.",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "task",
+                        "in": "path",
+                        "required": true,
+                        "description": "Task ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "attachment",
+                        "in": "path",
+                        "required": true,
+                        "description": "Attachment ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Binary file stream",
+                        "content": {
+                            "application/octet-stream": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/{task}/attachments/{attachment}": {
+            "delete": {
+                "tags": [
+                    "Attachments"
+                ],
+                "summary": "Delete file attachment",
+                "description": "Delete file attachment and remove file from private disk.",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "task",
+                        "in": "path",
+                        "required": true,
+                        "description": "Task ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "attachment",
+                        "in": "path",
+                        "required": true,
+                        "description": "Attachment ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Attachment deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StandardEnvelopeResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -3117,6 +3492,245 @@
                                 "items": {
                                     "$ref": "#/components/schemas/TaskResource"
                                 }
+                            }
+                        }
+                    },
+                    "response_status": {
+                        "$ref": "#/components/schemas/ResponseStatus"
+                    }
+                }
+            },
+            "StoreCommentRequest": {
+                "type": "object",
+                "required": [
+                    "body"
+                ],
+                "properties": {
+                    "body": {
+                        "type": "string",
+                        "maxLength": 5000,
+                        "example": "Let us schedule a code review tomorrow morning."
+                    }
+                }
+            },
+            "UpdateCommentRequest": {
+                "type": "object",
+                "required": [
+                    "body"
+                ],
+                "properties": {
+                    "body": {
+                        "type": "string",
+                        "maxLength": 5000,
+                        "example": "Updated comment content with revised details."
+                    }
+                }
+            },
+            "CommentResource": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "task_id": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "body": {
+                        "type": "string",
+                        "example": "Let us schedule a code review tomorrow morning."
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-10-31T10:00:00Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-10-31T10:05:00Z"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/UserSummaryResource"
+                    },
+                    "helpers": {
+                        "type": "object",
+                        "properties": {
+                            "can_update": {
+                                "type": "boolean",
+                                "example": true
+                            },
+                            "can_delete": {
+                                "type": "boolean",
+                                "example": true
+                            }
+                        }
+                    }
+                }
+            },
+            "CommentDetailResponse": {
+                "type": "object",
+                "properties": {
+                    "key": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "code": {
+                        "type": "integer",
+                        "example": 200
+                    },
+                    "msg": {
+                        "type": "string",
+                        "example": "Comment processed successfully."
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/CommentResource"
+                    },
+                    "response_status": {
+                        "$ref": "#/components/schemas/ResponseStatus"
+                    }
+                }
+            },
+            "CommentListResponse": {
+                "type": "object",
+                "properties": {
+                    "key": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "code": {
+                        "type": "integer",
+                        "example": 200
+                    },
+                    "msg": {
+                        "type": "string",
+                        "example": "Comments retrieved successfully."
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "data": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/CommentResource"
+                                }
+                            },
+                            "links": {
+                                "$ref": "#/components/schemas/PaginationLinks"
+                            },
+                            "meta": {
+                                "$ref": "#/components/schemas/PaginationMeta"
+                            }
+                        }
+                    },
+                    "response_status": {
+                        "$ref": "#/components/schemas/ResponseStatus"
+                    }
+                }
+            },
+            "AttachmentResource": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "task_id": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "uploaded_by": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "original_name": {
+                        "type": "string",
+                        "example": "architecture-diagram.pdf"
+                    },
+                    "mime_type": {
+                        "type": "string",
+                        "example": "application/pdf"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "example": 204800
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-10-31T10:00:00Z"
+                    },
+                    "uploader": {
+                        "$ref": "#/components/schemas/UserSummaryResource"
+                    },
+                    "helpers": {
+                        "type": "object",
+                        "properties": {
+                            "can_delete": {
+                                "type": "boolean",
+                                "example": true
+                            }
+                        }
+                    }
+                }
+            },
+            "AttachmentDetailResponse": {
+                "type": "object",
+                "properties": {
+                    "key": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "code": {
+                        "type": "integer",
+                        "example": 201
+                    },
+                    "msg": {
+                        "type": "string",
+                        "example": "Attachment uploaded successfully."
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/AttachmentResource"
+                    },
+                    "response_status": {
+                        "$ref": "#/components/schemas/ResponseStatus"
+                    }
+                }
+            },
+            "AttachmentListResponse": {
+                "type": "object",
+                "properties": {
+                    "key": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "code": {
+                        "type": "integer",
+                        "example": 200
+                    },
+                    "msg": {
+                        "type": "string",
+                        "example": "Attachments retrieved successfully."
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "data": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/AttachmentResource"
+                                }
+                            },
+                            "links": {
+                                "$ref": "#/components/schemas/PaginationLinks"
+                            },
+                            "meta": {
+                                "$ref": "#/components/schemas/PaginationMeta"
                             }
                         }
                     },

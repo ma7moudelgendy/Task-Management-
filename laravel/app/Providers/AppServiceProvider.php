@@ -4,7 +4,11 @@ namespace App\Providers;
 
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\TaskAttachment;
+use App\Models\TaskComment;
 use App\Models\Team;
+use App\Policies\AttachmentPolicy;
+use App\Policies\CommentPolicy;
 use App\Policies\ProjectPolicy;
 use App\Policies\TaskPolicy;
 use App\Policies\TeamPolicy;
@@ -29,5 +33,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Team::class, TeamPolicy::class);
         Gate::policy(Project::class, ProjectPolicy::class);
         Gate::policy(Task::class, TaskPolicy::class);
+        Gate::policy(TaskComment::class, CommentPolicy::class);
+        Gate::policy(TaskAttachment::class, AttachmentPolicy::class);
     }
 }
