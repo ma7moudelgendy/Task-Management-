@@ -7,6 +7,7 @@ use App\DTOs\Task\StoreTaskDTO;
 use App\DTOs\Task\SyncAssigneesDTO;
 use App\DTOs\Task\UpdateTaskDTO;
 use App\Enums\TaskStatus;
+use App\Events\TaskAssigned;
 use App\Models\ActivityLog;
 use App\Models\Project;
 use App\Models\Task;
@@ -79,6 +80,10 @@ class TaskService
 
             if (! empty($dto->assigneeIds)) {
                 $this->taskRepository->syncAssignees($task, $dto->assigneeIds, $creator->id);
+                $assignees = User::whereIn('id', $dto->assigneeIds)->get();
+                foreach ($assignees as $assignee) {
+                    TaskAssigned::dispatch($task, $assignee, $creator);
+                }
             }
 
             ActivityLog::create([
@@ -192,7 +197,17 @@ class TaskService
                 }
             }
 
+            $previousAssigneeIds = $task->assignees()->pluck('users.id')->all();
+
             $this->taskRepository->syncAssignees($task, $dto->assigneeIds, $assigner->id);
+
+            $newlyAssignedIds = array_diff($dto->assigneeIds, $previousAssigneeIds);
+            if (! empty($newlyAssignedIds)) {
+                $newAssignees = User::whereIn('id', $newlyAssignedIds)->get();
+                foreach ($newAssignees as $assignee) {
+                    TaskAssigned::dispatch($task, $assignee, $assigner);
+                }
+            }
 
             ActivityLog::create([
                 'actor_id' => $assigner->id,

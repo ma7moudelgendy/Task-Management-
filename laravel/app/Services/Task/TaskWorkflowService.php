@@ -4,6 +4,7 @@ namespace App\Services\Task;
 
 use App\DTOs\Task\ChangeTaskStatusDTO;
 use App\Enums\TaskStatus;
+use App\Events\TaskStatusChanged;
 use App\Models\ActivityLog;
 use App\Models\Task;
 use App\Models\User;
@@ -92,6 +93,8 @@ class TaskWorkflowService
                 ],
                 'created_at' => now(),
             ]);
+
+            TaskStatusChanged::dispatch($task, $oldStatus->value, $dto->status->value, $actor);
 
             return $task->fresh(['assignees', 'creator', 'project:id,name,team_id', 'subtasks']);
         });

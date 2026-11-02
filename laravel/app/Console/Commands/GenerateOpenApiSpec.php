@@ -123,6 +123,14 @@ class GenerateOpenApiSpec extends Command
                     'name' => 'Attachments',
                     'description' => 'Multi-type validated task file attachments on private disk storage and authorized download streaming.',
                 ],
+                [
+                    'name' => 'Notifications',
+                    'description' => 'User in-app notifications, assignment alerts, status change updates, and read status management.',
+                ],
+                [
+                    'name' => 'Task Recurrence',
+                    'description' => 'Recurring task schedules (daily, weekly, monthly) and automated generation of independent task clones.',
+                ],
             ],
             'paths' => $this->buildPaths(),
             'components' => $this->buildComponents(),
@@ -2104,6 +2112,155 @@ class GenerateOpenApiSpec extends Command
                     ],
                 ],
             ],
+            '/notifications' => [
+                'get' => [
+                    'tags' => ['Notifications'],
+                    'summary' => 'List notifications',
+                    'description' => 'Retrieve paginated notifications for the authenticated user.',
+                    'security' => [['BearerAuth' => []]],
+                    'parameters' => [
+                        [
+                            'name' => 'unread_only',
+                            'in' => 'query',
+                            'required' => false,
+                            'schema' => ['type' => 'boolean', 'default' => false],
+                        ],
+                        [
+                            'name' => 'per_page',
+                            'in' => 'query',
+                            'required' => false,
+                            'schema' => ['type' => 'integer', 'default' => 15],
+                        ],
+                    ],
+                    'responses' => [
+                        '200' => [
+                            'description' => 'Notifications retrieved successfully',
+                            'content' => [
+                                'application/json' => [
+                                    'schema' => [
+                                        '$ref' => '#/components/schemas/NotificationListResponse',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            '/notifications/read-all' => [
+                'post' => [
+                    'tags' => ['Notifications'],
+                    'summary' => 'Mark all notifications as read',
+                    'description' => 'Mark all unread notifications for the authenticated user as read.',
+                    'security' => [['BearerAuth' => []]],
+                    'responses' => [
+                        '200' => [
+                            'description' => 'All notifications marked as read',
+                            'content' => [
+                                'application/json' => [
+                                    'schema' => [
+                                        '$ref' => '#/components/schemas/MarkAllReadResponse',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            '/notifications/{id}/read' => [
+                'post' => [
+                    'tags' => ['Notifications'],
+                    'summary' => 'Mark notification as read',
+                    'description' => 'Mark a specific user notification as read by UUID.',
+                    'security' => [['BearerAuth' => []]],
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'description' => 'Notification UUID',
+                            'schema' => ['type' => 'string', 'format' => 'uuid'],
+                        ],
+                    ],
+                    'responses' => [
+                        '200' => [
+                            'description' => 'Notification marked as read',
+                            'content' => [
+                                'application/json' => [
+                                    'schema' => [
+                                        '$ref' => '#/components/schemas/NotificationDetailResponse',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            '/tasks/{task}/recurrence' => [
+                'get' => [
+                    'tags' => ['Task Recurrence'],
+                    'summary' => 'Get task recurrence rule',
+                    'description' => 'Retrieve the recurrence rule defined on a task.',
+                    'security' => [['BearerAuth' => []]],
+                    'parameters' => [
+                        [
+                            'name' => 'task',
+                            'in' => 'path',
+                            'required' => true,
+                            'description' => 'Task ID',
+                            'schema' => ['type' => 'integer'],
+                        ],
+                    ],
+                    'responses' => [
+                        '200' => [
+                            'description' => 'Recurrence rule retrieved successfully',
+                            'content' => [
+                                'application/json' => [
+                                    'schema' => [
+                                        '$ref' => '#/components/schemas/RecurringTaskRuleResponse',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'post' => [
+                    'tags' => ['Task Recurrence'],
+                    'summary' => 'Set or update task recurrence rule',
+                    'description' => 'Configure recurrence schedule (DAILY, WEEKLY, MONTHLY) for a task.',
+                    'security' => [['BearerAuth' => []]],
+                    'parameters' => [
+                        [
+                            'name' => 'task',
+                            'in' => 'path',
+                            'required' => true,
+                            'description' => 'Task ID',
+                            'schema' => ['type' => 'integer'],
+                        ],
+                    ],
+                    'requestBody' => [
+                        'required' => true,
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    '$ref' => '#/components/schemas/StoreRecurrenceRuleRequest',
+                                ],
+                            ],
+                        ],
+                    ],
+                    'responses' => [
+                        '200' => [
+                            'description' => 'Recurrence rule saved successfully',
+                            'content' => [
+                                'application/json' => [
+                                    'schema' => [
+                                        '$ref' => '#/components/schemas/RecurringTaskRuleResponse',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -2899,6 +3056,107 @@ class GenerateOpenApiSpec extends Command
                                 'meta' => ['$ref' => '#/components/schemas/PaginationMeta'],
                             ],
                         ],
+                        'response_status' => ['$ref' => '#/components/schemas/ResponseStatus'],
+                    ],
+                ],
+                'NotificationResource' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'id' => ['type' => 'string', 'format' => 'uuid', 'example' => 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'],
+                        'type' => ['type' => 'string', 'example' => 'TaskAssignedNotification'],
+                        'data' => [
+                            'type' => 'object',
+                            'properties' => [
+                                'task_id' => ['type' => 'integer', 'example' => 10],
+                                'title' => ['type' => 'string', 'example' => 'Design System Tokens'],
+                                'project_id' => ['type' => 'integer', 'example' => 2],
+                                'project_name' => ['type' => 'string', 'example' => 'Design Sprint'],
+                                'assigner_id' => ['type' => 'integer', 'example' => 1],
+                                'assigner_name' => ['type' => 'string', 'example' => 'John Doe'],
+                                'message' => ['type' => 'string', 'example' => 'You were assigned to task: Design System Tokens'],
+                            ],
+                        ],
+                        'read_at' => ['type' => 'string', 'format' => 'date-time', 'nullable' => true, 'example' => null],
+                        'created_at' => ['type' => 'string', 'format' => 'date-time', 'example' => '2026-10-31T12:00:00Z'],
+                    ],
+                ],
+                'NotificationDetailResponse' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'key' => ['type' => 'string', 'example' => 'success'],
+                        'code' => ['type' => 'integer', 'example' => 200],
+                        'msg' => ['type' => 'string', 'example' => 'Notification marked as read.'],
+                        'data' => ['$ref' => '#/components/schemas/NotificationResource'],
+                        'response_status' => ['$ref' => '#/components/schemas/ResponseStatus'],
+                    ],
+                ],
+                'NotificationListResponse' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'key' => ['type' => 'string', 'example' => 'success'],
+                        'code' => ['type' => 'integer', 'example' => 200],
+                        'msg' => ['type' => 'string', 'example' => 'Notifications retrieved successfully.'],
+                        'data' => [
+                            'type' => 'object',
+                            'properties' => [
+                                'data' => [
+                                    'type' => 'array',
+                                    'items' => ['$ref' => '#/components/schemas/NotificationResource'],
+                                ],
+                                'links' => ['$ref' => '#/components/schemas/PaginationLinks'],
+                                'meta' => ['$ref' => '#/components/schemas/PaginationMeta'],
+                            ],
+                        ],
+                        'response_status' => ['$ref' => '#/components/schemas/ResponseStatus'],
+                    ],
+                ],
+                'MarkAllReadResponse' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'key' => ['type' => 'string', 'example' => 'success'],
+                        'code' => ['type' => 'integer', 'example' => 200],
+                        'msg' => ['type' => 'string', 'example' => 'All notifications marked as read.'],
+                        'data' => [
+                            'type' => 'object',
+                            'properties' => [
+                                'marked_as_read_count' => ['type' => 'integer', 'example' => 3],
+                            ],
+                        ],
+                        'response_status' => ['$ref' => '#/components/schemas/ResponseStatus'],
+                    ],
+                ],
+                'StoreRecurrenceRuleRequest' => [
+                    'type' => 'object',
+                    'required' => ['frequency', 'interval', 'starts_at'],
+                    'properties' => [
+                        'frequency' => ['type' => 'string', 'enum' => ['DAILY', 'WEEKLY', 'MONTHLY'], 'example' => 'WEEKLY'],
+                        'interval' => ['type' => 'integer', 'minimum' => 1, 'maximum' => 365, 'example' => 1],
+                        'starts_at' => ['type' => 'string', 'format' => 'date-time', 'example' => '2026-11-01T09:00:00Z'],
+                        'ends_at' => ['type' => 'string', 'format' => 'date-time', 'nullable' => true, 'example' => '2027-01-01T09:00:00Z'],
+                        'timezone' => ['type' => 'string', 'example' => 'UTC'],
+                    ],
+                ],
+                'RecurringTaskRuleResource' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'id' => ['type' => 'integer', 'example' => 1],
+                        'task_id' => ['type' => 'integer', 'example' => 10],
+                        'frequency' => ['type' => 'string', 'example' => 'WEEKLY'],
+                        'interval' => ['type' => 'integer', 'example' => 1],
+                        'starts_at' => ['type' => 'string', 'format' => 'date-time', 'example' => '2026-11-01T09:00:00Z'],
+                        'ends_at' => ['type' => 'string', 'format' => 'date-time', 'nullable' => true, 'example' => '2027-01-01T09:00:00Z'],
+                        'next_run_at' => ['type' => 'string', 'format' => 'date-time', 'example' => '2026-11-01T09:00:00Z'],
+                        'timezone' => ['type' => 'string', 'example' => 'UTC'],
+                        'is_active' => ['type' => 'boolean', 'example' => true],
+                    ],
+                ],
+                'RecurringTaskRuleResponse' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'key' => ['type' => 'string', 'example' => 'success'],
+                        'code' => ['type' => 'integer', 'example' => 200],
+                        'msg' => ['type' => 'string', 'example' => 'Recurrence rule processed successfully.'],
+                        'data' => ['$ref' => '#/components/schemas/RecurringTaskRuleResource'],
                         'response_status' => ['$ref' => '#/components/schemas/ResponseStatus'],
                     ],
                 ],

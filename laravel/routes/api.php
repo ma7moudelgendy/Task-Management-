@@ -26,6 +26,7 @@ require __DIR__ . '/guards/v1/teams.php';
 require __DIR__ . '/guards/v1/projects.php';
 require __DIR__ . '/guards/v1/tasks.php';
 require __DIR__ . '/guards/v1/collaboration.php';
+require __DIR__ . '/guards/v1/notifications.php';
 
 
 
