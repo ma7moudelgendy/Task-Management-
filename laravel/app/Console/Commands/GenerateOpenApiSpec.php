@@ -131,6 +131,14 @@ class GenerateOpenApiSpec extends Command
                     'name' => 'Task Recurrence',
                     'description' => 'Recurring task schedules (daily, weekly, monthly) and automated generation of independent task clones.',
                 ],
+                [
+                    'name' => 'Dashboard',
+                    'description' => 'User personal dashboard metrics, status breakdown, upcoming and overdue tasks.',
+                ],
+                [
+                    'name' => 'Project Analytics',
+                    'description' => 'Project-wide completion metrics, status and priority distribution, and assignee workload analysis.',
+                ],
             ],
             'paths' => $this->buildPaths(),
             'components' => $this->buildComponents(),
@@ -2261,6 +2269,55 @@ class GenerateOpenApiSpec extends Command
                     ],
                 ],
             ],
+            '/dashboard' => [
+                'get' => [
+                    'tags' => ['Dashboard'],
+                    'summary' => 'Get user personal dashboard',
+                    'description' => 'Retrieve aggregate task counts by status, upcoming tasks, overdue items, and recent activity.',
+                    'security' => [['BearerAuth' => []]],
+                    'responses' => [
+                        '200' => [
+                            'description' => 'Dashboard metrics retrieved successfully',
+                            'content' => [
+                                'application/json' => [
+                                    'schema' => [
+                                        '$ref' => '#/components/schemas/DashboardResponse',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            '/projects/{project}/analytics' => [
+                'get' => [
+                    'tags' => ['Project Analytics'],
+                    'summary' => 'Get project analytics',
+                    'description' => 'Retrieve project completion percentage, status breakdown, priority distribution, and assignee workload analysis.',
+                    'security' => [['BearerAuth' => []]],
+                    'parameters' => [
+                        [
+                            'name' => 'project',
+                            'in' => 'path',
+                            'required' => true,
+                            'description' => 'Project ID',
+                            'schema' => ['type' => 'integer'],
+                        ],
+                    ],
+                    'responses' => [
+                        '200' => [
+                            'description' => 'Project analytics retrieved successfully',
+                            'content' => [
+                                'application/json' => [
+                                    'schema' => [
+                                        '$ref' => '#/components/schemas/ProjectAnalyticsResponse',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -3157,6 +3214,159 @@ class GenerateOpenApiSpec extends Command
                         'code' => ['type' => 'integer', 'example' => 200],
                         'msg' => ['type' => 'string', 'example' => 'Recurrence rule processed successfully.'],
                         'data' => ['$ref' => '#/components/schemas/RecurringTaskRuleResource'],
+                        'response_status' => ['$ref' => '#/components/schemas/ResponseStatus'],
+                    ],
+                ],
+                'DashboardResponse' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'key' => ['type' => 'string', 'example' => 'success'],
+                        'code' => ['type' => 'integer', 'example' => 200],
+                        'msg' => ['type' => 'string', 'example' => 'Dashboard metrics retrieved successfully.'],
+                        'data' => [
+                            'type' => 'object',
+                            'properties' => [
+                                'stats' => [
+                                    'type' => 'object',
+                                    'properties' => [
+                                        'status' => [
+                                            'type' => 'object',
+                                            'properties' => [
+                                                'TODO' => ['type' => 'integer', 'example' => 4],
+                                                'IN_PROGRESS' => ['type' => 'integer', 'example' => 2],
+                                                'IN_REVIEW' => ['type' => 'integer', 'example' => 1],
+                                                'DONE' => ['type' => 'integer', 'example' => 7],
+                                                'CANCELLED' => ['type' => 'integer', 'example' => 0],
+                                            ],
+                                        ],
+                                        'total_assigned' => ['type' => 'integer', 'example' => 14],
+                                        'overdue_count' => ['type' => 'integer', 'example' => 2],
+                                    ],
+                                ],
+                                'overdue_tasks' => [
+                                    'type' => 'array',
+                                    'items' => [
+                                        'type' => 'object',
+                                        'properties' => [
+                                            'id' => ['type' => 'integer', 'example' => 12],
+                                            'title' => ['type' => 'string', 'example' => 'Fix memory leak'],
+                                            'priority' => ['type' => 'string', 'example' => 'HIGH'],
+                                            'status' => ['type' => 'string', 'example' => 'IN_PROGRESS'],
+                                            'due_at' => ['type' => 'string', 'format' => 'date-time', 'example' => '2026-10-30T10:00:00Z'],
+                                            'project' => [
+                                                'type' => 'object',
+                                                'properties' => [
+                                                    'id' => ['type' => 'integer', 'example' => 1],
+                                                    'name' => ['type' => 'string', 'example' => 'Backend Refactor'],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                                'upcoming_tasks' => [
+                                    'type' => 'array',
+                                    'items' => [
+                                        'type' => 'object',
+                                        'properties' => [
+                                            'id' => ['type' => 'integer', 'example' => 15],
+                                            'title' => ['type' => 'string', 'example' => 'Implement search index'],
+                                            'priority' => ['type' => 'string', 'example' => 'MEDIUM'],
+                                            'status' => ['type' => 'string', 'example' => 'TODO'],
+                                            'due_at' => ['type' => 'string', 'format' => 'date-time', 'example' => '2026-11-04T12:00:00Z'],
+                                            'project' => [
+                                                'type' => 'object',
+                                                'properties' => [
+                                                    'id' => ['type' => 'integer', 'example' => 1],
+                                                    'name' => ['type' => 'string', 'example' => 'Backend Refactor'],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                                'recent_activity' => [
+                                    'type' => 'array',
+                                    'items' => [
+                                        'type' => 'object',
+                                        'properties' => [
+                                            'id' => ['type' => 'integer', 'example' => 105],
+                                            'action' => ['type' => 'string', 'example' => 'status_changed'],
+                                            'actor' => [
+                                                'type' => 'object',
+                                                'properties' => [
+                                                    'id' => ['type' => 'integer', 'example' => 2],
+                                                    'name' => ['type' => 'string', 'example' => 'Jane Doe'],
+                                                    'email' => ['type' => 'string', 'example' => 'jane@example.com'],
+                                                ],
+                                            ],
+                                            'project' => [
+                                                'type' => 'object',
+                                                'properties' => [
+                                                    'id' => ['type' => 'integer', 'example' => 1],
+                                                    'name' => ['type' => 'string', 'example' => 'Backend Refactor'],
+                                                ],
+                                            ],
+                                            'metadata' => ['type' => 'object'],
+                                            'created_at' => ['type' => 'string', 'format' => 'date-time', 'example' => '2026-10-31T14:00:00Z'],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                        'response_status' => ['$ref' => '#/components/schemas/ResponseStatus'],
+                    ],
+                ],
+                'ProjectAnalyticsResponse' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'key' => ['type' => 'string', 'example' => 'success'],
+                        'code' => ['type' => 'integer', 'example' => 200],
+                        'msg' => ['type' => 'string', 'example' => 'Project analytics retrieved successfully.'],
+                        'data' => [
+                            'type' => 'object',
+                            'properties' => [
+                                'project_id' => ['type' => 'integer', 'example' => 1],
+                                'project_name' => ['type' => 'string', 'example' => 'Backend Refactor'],
+                                'total_tasks' => ['type' => 'integer', 'example' => 20],
+                                'completed_tasks' => ['type' => 'integer', 'example' => 10],
+                                'cancelled_tasks' => ['type' => 'integer', 'example' => 2],
+                                'active_tasks' => ['type' => 'integer', 'example' => 18],
+                                'completion_percentage' => ['type' => 'number', 'example' => 55.56],
+                                'overdue_count' => ['type' => 'integer', 'example' => 3],
+                                'status_distribution' => [
+                                    'type' => 'object',
+                                    'properties' => [
+                                        'TODO' => ['type' => 'integer', 'example' => 5],
+                                        'IN_PROGRESS' => ['type' => 'integer', 'example' => 2],
+                                        'IN_REVIEW' => ['type' => 'integer', 'example' => 1],
+                                        'DONE' => ['type' => 'integer', 'example' => 10],
+                                        'CANCELLED' => ['type' => 'integer', 'example' => 2],
+                                    ],
+                                ],
+                                'priority_distribution' => [
+                                    'type' => 'object',
+                                    'properties' => [
+                                        'LOW' => ['type' => 'integer', 'example' => 4],
+                                        'MEDIUM' => ['type' => 'integer', 'example' => 8],
+                                        'HIGH' => ['type' => 'integer', 'example' => 6],
+                                        'URGENT' => ['type' => 'integer', 'example' => 2],
+                                    ],
+                                ],
+                                'assignee_workload' => [
+                                    'type' => 'array',
+                                    'items' => [
+                                        'type' => 'object',
+                                        'properties' => [
+                                            'user_id' => ['type' => 'integer', 'example' => 2],
+                                            'name' => ['type' => 'string', 'example' => 'Jane Doe'],
+                                            'email' => ['type' => 'string', 'example' => 'jane@example.com'],
+                                            'open_tasks_count' => ['type' => 'integer', 'example' => 3],
+                                            'completed_tasks_count' => ['type' => 'integer', 'example' => 5],
+                                            'total_assigned' => ['type' => 'integer', 'example' => 8],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
                         'response_status' => ['$ref' => '#/components/schemas/ResponseStatus'],
                     ],
                 ],

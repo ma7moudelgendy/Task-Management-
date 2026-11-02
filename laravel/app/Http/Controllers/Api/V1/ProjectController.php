@@ -10,12 +10,14 @@ use App\Http\Requests\Api\Project\AddProjectMemberRequest;
 use App\Http\Requests\Api\Project\StoreProjectRequest;
 use App\Http\Requests\Api\Project\UpdateProjectMemberRoleRequest;
 use App\Http\Requests\Api\Project\UpdateProjectRequest;
+use App\Http\Resources\Api\ProjectAnalyticsResource;
 use App\Http\Resources\Api\ProjectMemberResource;
 use App\Http\Resources\Api\ProjectResource;
 use App\Models\Project;
 use App\Models\User;
 use App\Repositories\Contracts\TeamRepositoryInterface;
 use App\Services\Project\ProjectService;
+use App\Services\ProjectAnalyticsService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -186,6 +188,23 @@ class ProjectController extends ApiController
             return $this->jsonResponse(
                 data: null,
                 msg: 'Member removed from project successfully.'
+            );
+        });
+    }
+
+    /**
+     * Get aggregated completion and workload analytics for a project.
+     */
+    public function analytics(Project $project, ProjectAnalyticsService $analyticsService): JsonResponse
+    {
+        return $this->handleApi(function () use ($project, $analyticsService) {
+            $this->authorize('view', $project);
+
+            $analytics = $analyticsService->getProjectAnalytics($project);
+
+            return $this->jsonResponse(
+                data: ProjectAnalyticsResource::make($analytics),
+                msg: 'Project analytics retrieved successfully.'
             );
         });
     }

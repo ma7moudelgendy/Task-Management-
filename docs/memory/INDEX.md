@@ -14,6 +14,7 @@
 - [`features/07-task-workflow-dependencies-and-audit.md`](features/07-task-workflow-dependencies-and-audit.md) — Phase 7: Task workflow, status transitions, dependencies & audit trail.
 - [`features/08-comments-and-attachments.md`](features/08-comments-and-attachments.md) — Phase 8: Comments & attachments collaboration module.
 - [`features/09-notifications-queues-and-recurrence.md`](features/09-notifications-queues-and-recurrence.md) — Phase 9: Background processing, notifications & recurrence module.
+- [`features/10-dashboard-and-analytics.md`](features/10-dashboard-and-analytics.md) — Phase 10: Dashboards & project analytics module.
 
 ## Domain
 - [`domain/models-and-relations.md`](domain/models-and-relations.md) — Core models, relationships, and invariants.
@@ -27,3 +28,4 @@
 - [`api/v1-task-workflow.md`](api/v1-task-workflow.md) — `/api/v1/tasks/{task}/status`, `dependencies`, `history` (workflow, DAG, audit)
 - [`api/v1-comments-and-attachments.md`](api/v1-comments-and-attachments.md) — `/api/v1/tasks/{task}/comments` & `attachments` (discussions, private file storage, streaming)
 - [`api/v1-notifications.md`](api/v1-notifications.md) — `/api/v1/notifications` & `tasks/{task}/recurrence` (user notifications & recurrence engine)
+- [`api/v1-dashboard-and-analytics.md`](api/v1-dashboard-and-analytics.md) — `/api/v1/dashboard` & `/api/v1/projects/{project}/analytics` (personal dashboard & project analytics)

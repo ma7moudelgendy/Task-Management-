@@ -82,6 +82,8 @@ class OpenApiSpecTest extends TestCase
             '/notifications/read-all' => ['post'],
             '/notifications/{id}/read' => ['post'],
             '/tasks/{task}/recurrence' => ['get', 'post'],
+            '/dashboard' => ['get'],
+            '/projects/{project}/analytics' => ['get'],
         ];
 
         foreach ($expectedEndpoints as $route => $methods) {
@@ -153,6 +155,8 @@ class OpenApiSpecTest extends TestCase
             ['/notifications/{id}/read', 'post'],
             ['/tasks/{task}/recurrence', 'get'],
             ['/tasks/{task}/recurrence', 'post'],
+            ['/dashboard', 'get'],
+            ['/projects/{project}/analytics', 'get'],
         ];
 
         foreach ($protectedOperations as [$route, $method]) {

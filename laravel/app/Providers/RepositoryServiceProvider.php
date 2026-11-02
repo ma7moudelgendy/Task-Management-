@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Repositories\Contracts\AnalyticsRepositoryInterface;
 use App\Repositories\Contracts\AttachmentRepositoryInterface;
 use App\Repositories\Contracts\CommentRepositoryInterface;
 use App\Repositories\Contracts\NotificationRepositoryInterface;
@@ -12,6 +13,7 @@ use App\Repositories\Contracts\TaskRepositoryInterface;
 use App\Repositories\Contracts\TaskStatusHistoryRepositoryInterface;
 use App\Repositories\Contracts\TeamRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Repositories\Eloquent\AnalyticsRepository;
 use App\Repositories\Eloquent\AttachmentRepository;
 use App\Repositories\Eloquent\CommentRepository;
 use App\Repositories\Eloquent\NotificationRepository;
@@ -41,6 +43,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(AttachmentRepositoryInterface::class, AttachmentRepository::class);
         $this->app->bind(NotificationRepositoryInterface::class, NotificationRepository::class);
         $this->app->bind(RecurringTaskRuleRepositoryInterface::class, RecurringTaskRuleRepository::class);
+        $this->app->bind(AnalyticsRepositoryInterface::class, AnalyticsRepository::class);
     }
 
     /**
