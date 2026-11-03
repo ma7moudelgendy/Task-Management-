@@ -29,3 +29,4 @@ class ProjectAnalyticsResource extends JsonResource
         ];
     }
 }
+

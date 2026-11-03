@@ -17,3 +17,4 @@
   - `active_tasks = total_tasks - cancelled_tasks`
   - `completion_percentage = active_tasks > 0 ? round((completed_tasks / active_tasks) * 100, 2) : 0.0`
   - Workload analysis groups tasks by member into open vs completed partitions using a single SQL aggregation join to avoid N+1 queries.
+

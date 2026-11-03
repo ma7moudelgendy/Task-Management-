@@ -188,3 +188,4 @@ class ProjectAnalyticsTest extends TestCase
             ]);
     }
 }
+

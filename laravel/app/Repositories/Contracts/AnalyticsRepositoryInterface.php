@@ -64,3 +64,4 @@ interface AnalyticsRepositoryInterface
      */
     public function getProjectAssigneeWorkload(Project $project): array;
 }
+

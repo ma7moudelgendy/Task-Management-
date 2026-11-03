@@ -8,3 +8,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index']);
     Route::get('projects/{project}/analytics', [ProjectController::class, 'analytics']);
 });
+

@@ -62,3 +62,4 @@ class DashboardResource extends JsonResource
         ];
     }
 }
+

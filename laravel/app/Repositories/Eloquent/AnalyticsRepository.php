@@ -237,3 +237,4 @@ class AnalyticsRepository implements AnalyticsRepositoryInterface
         })->all();
     }
 }
+

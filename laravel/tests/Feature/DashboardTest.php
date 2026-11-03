@@ -256,3 +256,4 @@ class DashboardTest extends TestCase
         $this->assertSame($this->project->id, $activities[0]['project']['id']);
     }
 }
+

@@ -29,3 +29,4 @@ Validate aggregation accuracy, scoping, edge cases (zero tasks, only cancelled t
      - Open count vs completed count per assignee.
    - `test_non_member_cannot_view_project_analytics`:
      - Returns 200 with `key: unauthorized`.
+

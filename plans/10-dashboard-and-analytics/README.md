@@ -22,3 +22,4 @@ Strict adherence to **MODE_A**:
 3. **Optimized Aggregation & Zero N+1:**
    - Single-query conditional aggregations (`COUNT(CASE WHEN ... THEN 1 END)`).
    - Direct indexed lookups with eager loading where appropriate.
+
